@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单条微博数据爬取结果</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+<body>
+<table class="table">
+  <caption>单条微博评论数据</caption>
+  <thead>
+    <tr>
+      <th>评论者</th>
+      <th>评论内容</th>
+      <th>评论点赞数</th>
+        <th>评论时间</th></tr>
+  </thead>
+  <tbody>
+  {% for item in commentresult %}
+   <tr class="success">
+        <td>{{ item.comment_name}}</td>
+        <td>{{ item.comment}}</td>
+        <td>{{ item.likenum}}</td>
+        <td>{{ item.datetime }}</td>
+   </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<table class="table">
+  <caption>单条微博转发数据</caption>
+  <thead>
+    <tr>
+      <th>转发者</th>
+      <th>二次转发数</th>
+      <th>转发时间</th>
+  </thead>
+  <tbody>
+  {% for item in repeatresult %}
+   <tr class="success">
+        <td>{{ item.repeatname}}</td>
+        <td>{{ item.repeatnum}}</td>
+        <td>{{ item.datetime }}</td>
+   </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人粉丝数据结果</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+<body>
+<table class="table">
+  <caption>个人粉丝数据</caption>
+  <thead>
+    <tr>
+      <th>粉丝名字</th>
+      <th>粉丝性别</th>
+        <th>粉丝位置</th>
+      <th>粉丝关注数</th>
+    <th>粉丝的粉丝数</th>
+    <th>粉丝的微博数</th></tr>
+  </thead>
+  <tbody>
+  {% for item in result %}
+   <tr class="success">
+        <td>{{ item.username }}</td>
+        <td>{{ item.gender}}</td>
+        <td>{{ item.location}}</td>
+        <td>{{ item.follow }}</td>
+       <td>{{ item.fans }}</td>
+   <td>{{ item.webnum}}</td>
+   </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+</html>

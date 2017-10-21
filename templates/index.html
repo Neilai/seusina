@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+	<title>东南大学新浪微博数据分析</title>
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+	<style>
+		.media-heading{
+			font-weight:bold;
+		}
+	</style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<a href="#" class="navbar-brand logo"><img src="/static/img/logo.png" alt="新浪微博爬虫"></a>
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+				<li><a href="#"><span class="glyphicon glyphicon-question-sign"></span> 关于</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="tab1">
+	<div class="container">
+		<h2 class="tab-h2" style="margin-top:25px">新浪微博爬虫数据分析</h2>
+		<div class="row">
+			<div class="col-md-6 col" >
+				<div class="media">
+					<div class="media-left">
+						<a href="/personalweibo/"><img src="/static/img/1.png" class="media-object" alt=""></a>
+					</div>
+					<div class="media-body">
+                        <h4 class="media-heading" >	<a href="/personalweibo/">单人微博分析</a></h4>
+						<p>根据url地址爬取所有微博的点赞数，评论数，转发数</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col">
+				<div class="media">
+					<div class="media-left">
+						<a href="/singleweibo/"><img src="/static/img/2.jpg" class="media-object" alt=""></a>
+					</div>
+					<div class="media-body">
+						<a href="/singleweibo/"><h4 class="media-heading">单条微博传播分析</h4></a>
+						<p>根据转发数，寻找二次转发最多的地方，从而获得微博转发爆点，根据转发时间绘制微博传播图像</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col">
+				<div class="media">
+					<div class="media-left">
+						<a href="/fans/"><img src="/static/img/3.jpg" class="media-object" alt=""></a>
+					</div>
+					<div class="media-body">
+						<a href="/fans/"><h4 class="media-heading">个人粉丝分析</h4></a>
+						<p>爬取个人所有的粉丝数，分析粉丝的性别地域分布曲线</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col">
+				<div class="media">
+					<div class="media-left">
+						<a href="/socialmap/"><img src="/static/img/4.jpg" class="media-object" alt=""></a>
+					</div>
+					<div class="media-body">
+                        <h4 class="media-heading"><a href="/socialmap/">社交关系分析</a></h4>
+						<p>依据广度优先搜索的算法，预先定义一个层数，分层爬取粉丝和关注数，得到数据后便可绘制成社交图谱图</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

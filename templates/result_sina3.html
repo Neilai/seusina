@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人粉丝数据结果</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+<body>
+<table class="table">
+  <caption>个人社交数据</caption>
+  <thead>
+    <tr>
+      <th>父结点</th>
+      <th>粉丝结点</th>
+        <th>结点层数</th>
+  </thead>
+  <tbody>
+  {% for item in result %}
+   <tr class="success">
+        <td>{{ item.fansparent }}</td>
+        <td>{{ item.fansname}}</td>
+        <td>{{ item.fanslevel}}</td>
+   </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+</html>
