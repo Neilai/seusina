@@ -27,7 +27,9 @@ urlpatterns = [
     url(r'^result2/', result2.as_view(),name="result2"),
     url(r'^result3/', result3.as_view(),name="result3"),
     url(r'^personalweibo/$',sina.as_view()),
+
     url(r'^singleweibo/$',sina1.as_view()),
+
     url(r'^fans/$',sina2.as_view()),
     url(r'^socialmap/$',sina3.as_view()),
     url(r'^$',TemplateView.as_view(template_name="index.html"),name="index"),
