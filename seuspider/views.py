@@ -64,9 +64,9 @@ class result1(View):
         try:
             cookie = request.POST.get("cookie","")
             timeVal=r.lpop(cookie+'datetime2')
-            name=r.lpop(cookie+'repeatname2').decode()
-            res["time"] = int(timeVal)
-            res["repeatname"]=name
+            # name=r.lpop(cookie+'repeatname2').decode()
+            res["time"] = int(timeVal.decode())
+            # res["repeatname"]=name
         except:
             res={}
         return HttpResponse(json.dumps(res), content_type='application/json')
