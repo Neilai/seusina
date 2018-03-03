@@ -55,11 +55,11 @@ class sina1(View):
 
 class result1(View):
     def post(self,request):
-        res={"time":[]}
+        res={}
         r = redis.Redis(host='127.0.0.1', port=6379)
         cookie = request.POST.get("cookie","")
         timeVal=r.lpop(cookie+'datetime2')
-        res["time"].append(int(timeVal))
+        res["time"] = int(timeVal)
         return HttpResponse(json.dumps(res), content_type='application/json')
 
 class sina2(View):
@@ -69,18 +69,20 @@ class sina2(View):
     def post(self,request):
         cookie=request.POST.get("cookie","")
         url=request.POST.get("url","")
-        data = {"project": "sina", "spider": "sinaspider2", "cookie": cookie, "url": url}
+        data = {"project": "sina", "spider": "sinaspider3", "cookie": cookie, "url": url}
         # result = requests.post("http://localhost:6800/schedule.json", data=data)
         return render(request, "result_sina2.html", {'cookie': cookie})
 
 
 class result2(View):
     def post(self,request):
-        res={"time":[]}
+        res={}
         r = redis.Redis(host='127.0.0.1', port=6379)
         cookie = request.POST.get("cookie", "")
-        timeVal=r.lpop(cookie+'datetime2')
-        res["time"]=int(timeVal)
+        location=r.lpop(cookie+'location3')
+        if(location):
+            res["location"]=location.decode()
+        print(res)
         return HttpResponse(json.dumps(res), content_type='application/json')
 
 

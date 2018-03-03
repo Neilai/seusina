@@ -5,34 +5,144 @@
     <title>个人粉丝数据结果</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/css/style.css">
-
+    <script src="https://cdn.bootcss.com/echarts/2.2.4/echarts-all.js"></script>
 </head>
 <body>
-<table class="table">
-  <caption>个人粉丝数据</caption>
-  <thead>
-    <tr>
-      <th>粉丝名字</th>
-      <th>粉丝性别</th>
-        <th>粉丝位置</th>
-      <th>粉丝关注数</th>
-    <th>粉丝的粉丝数</th>
-    <th>粉丝的微博数</th></tr>
-  </thead>
-  <tbody>
-  {% for item in result %}
-   <tr class="success">
-        <td>{{ item.username }}</td>
-        <td>{{ item.gender}}</td>
-        <td>{{ item.location}}</td>
-        <td>{{ item.follow }}</td>
-       <td>{{ item.fans }}</td>
-   <td>{{ item.webnum}}</td>
-   </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<div id="main" style="width: 900px;height:600px;"></div>
 </body>
-<script src="/static/js/jquery.min.js"></script>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
+<script>
+    var myChart = echarts.init(document.getElementById('main'));
+// 指定图表的配置项和数据
+    option = {
+            title : {
+                text: '粉丝分布',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                x:'left',
+                data:['粉丝数']
+            },
+            dataRange: {
+                x: 'left',
+                y: 'bottom',
+                splitList: [
+                    {start: 1500},
+                    {start: 600, end: 1500},
+                    {start: 310, end: 600},
+                    {start: 100, end: 300},
+                    {start: 10, end: 100},
+                    {start: 5, end: 5},
+                    {end: 10}
+                ],
+                color: ['#E0022B', '#E09107', '#A3E00B']
+            },
+            toolbox: {
+                show: true,
+                orient : 'vertical',
+                x: 'right',
+                y: 'center',
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            roamController: {
+                show: true,
+                x: 'right',
+                mapTypeControl: {
+                    'china': true
+                }
+            },
+            series : [
+                {
+                    name: '粉丝数',
+                    type: 'map',
+                    mapType: 'china',
+                    roam: false,
+                    itemStyle:{
+                        normal:{
+                            label:{
+                                show:true,
+                                textStyle: {
+                                    color: "rgb(249, 249, 249)"
+                                }
+                            }
+                        },
+                        emphasis:{label:{show:true}}
+                    },
+                    data:[
+                        {name: '北京',value: 0},
+                        {name: '天津',value: 0},
+                        {name: '上海',value: 0},
+                        {name: '重庆',value: 0},
+                        {name: '河北',value: 0},
+                        {name: '河南',value: 0},
+                        {name: '云南',value: 0},
+                        {name: '辽宁',value:0},
+                        {name: '黑龙江',value: 0},
+                        {name: '湖南',value: 0},
+                        {name: '安徽',value: 0},
+                        {name: '山东',value: 0},
+                        {name: '新疆',value: 0},
+                        {name: '江苏',value: 0},
+                        {name: '浙江',value: 0},
+                        {name: '江西',value: 0},
+                        {name: '湖北',value: 0},
+                        {name: '广西',value: 0},
+                        {name: '甘肃',value: 0},
+                        {name: '山西',value: 0},
+                        {name: '内蒙古',value: 0},
+                        {name: '陕西',value: 0},
+                        {name: '吉林',value: 0},
+                        {name: '福建',value: 0},
+                        {name: '贵州',value: 0},
+                        {name: '广东',value: 0},
+                        {name: '青海',value: 0},
+                        {name: '西藏',value: 0},
+                        {name: '四川',value: 0},
+                        {name: '宁夏',value: 0},
+                        {name: '海南',value: 0},
+                        {name: '台湾',value: 0},
+                        {name: '香港',value: 0},
+                        {name: '澳门',value: 0}
+                    ]
+                }
+            ]
+        };
+
+
+    setInterval(function(){$.ajax({
+          cache: false,
+          type: "POST",
+          url: "/result2/",
+          data: {"cookie":"{{cookie}}"},
+          async: true,
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+          },
+          success: function (res) {
+              console.log(res["location"])
+              for(var i=0;i<option.series[0].data.length;i++){
+                  if(res["location"]==option.series[0].data[i]["name"]){
+                      option.series[0].data[i]["value"]++;
+                  }
+              }
+              myChart.setOption(option);
+
+          },
+          error:function(error) {
+              alert('ajax 请求失败！')
+      },})},500)
+
+
+</script>
 </html>
