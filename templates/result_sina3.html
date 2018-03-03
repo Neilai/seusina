@@ -5,28 +5,155 @@
     <title>个人粉丝数据结果</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/css/style.css">
-
+    <script src="https://cdn.bootcss.com/echarts/2.2.4/echarts-all.js"></script>
 </head>
 <body>
-<table class="table">
-  <caption>个人社交数据</caption>
-  <thead>
-    <tr>
-      <th>父结点</th>
-      <th>粉丝结点</th>
-        <th>结点层数</th>
-  </thead>
-  <tbody>
-  {% for item in result %}
-   <tr class="success">
-        <td>{{ item.fansparent }}</td>
-        <td>{{ item.fansname}}</td>
-        <td>{{ item.fanslevel}}</td>
-   </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<div id="main" style="width: 900px;height:600px;"></div>
 </body>
-<script src="/static/js/jquery.min.js"></script>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
+<script>
+var myChart = echarts.init(document.getElementById('main'));
+// 指定图表的配置项和数据
+           option = {
+            title : {
+                text: '微博人物关系',
+                subtext: '数据来自微博爬虫',
+                x:'right',
+                y:'bottom'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: '{a} : {b}'
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    restore : {show: true},
+                    magicType: {show: true, type: ['force', 'chord']},
+                    saveAsImage : {show: true}
+                }
+            },
+            legend: {
+                x: 'left',
+                data:['起始人物','一级关注','二级关注','三级关注']
+            },
+            series : [
+                {
+                    type:'force',
+                    name : "人物关系",
+                    ribbonType: false,
+                    categories : [
+                        {
+                            name: '起始人物'
+                        },
+                        {
+                            name: '一级关注'
+                        },
+                        {
+                            name:'二级关注'
+                        },
+                        {
+                            name:'三级关注'
+                        }
+                    ],
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true,
+                                textStyle: {
+                                    color: '#333'
+                                }
+                            },
+                            nodeStyle : {
+                                brushType : 'both',
+                                borderColor : 'rgba(255,215,0,0.4)',
+                                borderWidth : 1
+                            },
+                            linkStyle: {
+                                type: 'curve'
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: false
+                                // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                            },
+                            nodeStyle : {
+                                //r: 30
+                            },
+                            linkStyle : {}
+                        }
+                    },
+                    useWorker: false,
+                    minRadius : 10,
+                    maxRadius : 25,
+                    gravity: 1.1,
+                    scaling: 1.1,
+                    roam: 'move',
+                    nodes:[
+                    ],
+                    links : [
+
+                    ]
+                }
+            ]
+        };
+
+    setInterval(function(){$.ajax({
+          cache: false,
+          type: "POST",
+          url: "/result3/",
+          data: {"cookie":"{{cookie}}"},
+          async: true,
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+          },
+          success: function (res) {
+              if(res["fanslevel"]){
+                      console.log(res)
+                      par={};
+                      son={};
+                      link={};
+
+                      par["category"]=res["fanslevel"]-1;
+                      par["name"]=res["fansparent"];
+                      par["value"]=parseInt(20/(par["category"]+1));
+
+                      son["category"]=res["fanslevel"];
+                      son["name"]=res["fansname"];
+                      son["value"]=parseInt(20/(son["category"]+1));
+
+                      console.log(par)
+                      console.log(son)
+                      link["source"]=par["name"];
+                      link["target"]=son["name"];
+                      link["weight"]=res["fanslevel"];
+                      link["name"]="关注"
+
+                      parExist=0
+                      sonExist=0
+                      for(var i=0;i<option.series[0].nodes.length;i++){
+                            if(par["name"]==option.series[0].nodes[i].name) {
+                                parExist=1;
+                            }
+                             if(son["name"]==option.series[0].nodes[i].name) {
+                                sonExist=1;
+                            }
+                      }
+                      if(!parExist)
+                            option.series[0].nodes.push(par);
+                      if(!sonExist)
+                            option.series[0].nodes.push(son);
+
+                      option.series[0].links.push(link);
+
+                      myChart.setOption(option);
+              }
+          },
+          error:function(error) {
+              alert('ajax 请求失败！')
+      },})},500)
+</script>
 </html>

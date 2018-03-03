@@ -8,7 +8,7 @@
     <script type="text/javascript" src="/static/js/echarts.min.js"> </script>
 </head>
 <body>
-     <div id="main" style="width: 900px;height:600px;"></div>
+     <div id="main" style="width: 100%;height:600px;"></div>
 </body>
 
 <script src="/static/js/jquery.min.js"></script>
@@ -16,22 +16,41 @@
 <script>
      var myChart = echarts.init(document.getElementById('main'));
 // 指定图表的配置项和数据
-    var option = {
+    function timestampToTime(timestamp) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes() + ':';
+        s = date.getSeconds();
+        return Y+M+D+h+m+s;
+    }
+     var option = {
         title: {
             text: '个人微博趋势'
+        },
+         tooltip : {
+        trigger: 'axis'
         },
         toolbox: {
             show: true,
             feature: {
                 saveAsImage: {
                     show: true
-                }
+                },
+                dataZoom:{
+                show:true
+            },
             }
+
+
         },
         legend: {
             data: ['点赞数','评论数','转发数']
         },
         xAxis: {
+
             data: []
         },
         yAxis: {},
@@ -62,14 +81,13 @@
           success: function (res) {
               console.log(res)
 
-              option.xAxis.data.push(parseInt(res["time"]));
-              option.series[0].data.push(parseInt(res["likenum"]));
-              option.series[1].data.push(parseInt(res["commentnum"]));
-              option.series[2].data.push(parseInt(res["repeatnum"]));
-
-             console.log(option)
-              myChart.setOption(option);
-
+              if(res["time"]){
+                  option.xAxis.data.push((res["time"]));
+                  option.series[0].data.push(parseInt(res["likenum"]));
+                  option.series[1].data.push(parseInt(res["commentnum"]));
+                  option.series[2].data.push(parseInt(res["repeatnum"]));
+                  myChart.setOption(option);
+              }
           },
           error:function(error) {
               alert('ajax 请求失败！')
