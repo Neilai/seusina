@@ -1,3 +1,4 @@
+#/usr/bin/python3.6
 from django.shortcuts import render
 from django.views.generic import View
 from  seuspider.models import *
@@ -91,14 +92,15 @@ class sina2(View):
 class result2(View):
     def post(self,request):
         res={}
+        r = redis.Redis(host='120.78.196.125', port=6379)
         try:
-            r = redis.Redis(host='120.78.196.125', port=6379)
             cookie = request.POST.get("cookie", "")
             location=r.lpop(cookie+'location3')
-            if(location):
+            if location:
                 res["location"]=location.decode()
-        except:
-            res={}
+        except Exception as e:
+            print(e)
+            res = {}
         return HttpResponse(json.dumps(res), content_type='application/json')
 
 
@@ -119,8 +121,8 @@ class sina3(View):
 class result3(View):
     def post(self,request):
         res = {}
+        r = redis.Redis(host='120.78.196.125', port=6379)
         try:
-            r = redis.Redis(host='120.78.196.125', port=6379)
             cookie = request.POST.get("cookie", "")
             fansparent = r.lpop(cookie + 'fansparent4')
             fansname=r.lpop(cookie + 'fansname4')
@@ -129,6 +131,7 @@ class result3(View):
             res["fansparent"]=fansparent.decode()
             res["fansname"]=fansname.decode()
             res["fanslevel"]=fanslevel.decode()
+            print(res)
         except:
             res={}
         return HttpResponse(json.dumps(res), content_type='application/json')

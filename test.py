@@ -6,7 +6,7 @@ import json
 # url="2613164393"
 # data = {"project": "sina", "spider": "sinaspider4", "cookie": cookie, "url": url}
 # result = requests.post("http://120.78.196.125/schedule.json", data=data)
-jobid="13a8b4524c3e11e88b3d00163e0ad926"
+jobid="57fd99904c7c11e88b3d00163e0ad926"
 data = {"project": "sina", "job": jobid}
 result = requests.post("http://120.78.196.125/cancel.json", data=data)
 result=json.loads(result.text)
