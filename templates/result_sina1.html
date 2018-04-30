@@ -8,12 +8,15 @@
     <script type="text/javascript" src="/static/js/echarts.min.js"> </script>
 </head>
 <body>
+<img id="loading" src="/static/img/loading.gif" alt="加载中" style="width:400px;height:400px;position: fixed;top:0;left:0;right:0;bottom: 0;margin:auto;display:none;">
 <div id="main" style="width: 1200px;height:800px;margin:auto;auto"></div>
 </body>
 
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 <script>
+    img=document.getElementById("loading")
+      img.style.display="block"
     processtime=function (val) {
                       var date = new Date(parseInt(val) * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
                       obj = {
@@ -51,12 +54,13 @@
             polar: {},
             tooltip: {
                 formatter: function (params) {
-                    return "转发时间:"+params.value[1]+":"+params.value[0];
+                    return "转发时间:"+params.value[0]+"时:"+params.value[1]+"分";
                 }
             },
             toolbox: {
                 show: true,
                 feature: {
+
                     dataView:{
                         show:true
                     },
@@ -114,7 +118,7 @@
           cache: false,
           type: "POST",
           url: "/result1/",
-          data: {"cookie":"{{cookie}}"},
+          data: {"cookie":"{{cookie}}","jobid":"{{jobid}}"},
           async: true,
           beforeSend: function (xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
@@ -122,7 +126,8 @@
           success: function (res) {
               console.log(res);
               if(res["time"]){
-                      console.log(res)
+                  img.style.display="none"
+                      //console.log(res)
                       result = processtime(res["time"])
                       console.log(result)
                       flag=0;
@@ -143,8 +148,26 @@
                   }
               },
           error:function(error) {
-              alert('ajax 请求失败！')
-      },})},300)
+              console.log('ajax 请求失败！')
+      },})},500)
+
+     window.onbeforeunload = function(){
+        $.ajax({
+          cache: false,
+          type: "POST",
+          url: "/cancel/",
+          data: {"cookie":"{{cookie}}","jobid":"{{jobid}}"},
+          async: true,
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+          },
+          success: function (res) {
+              console.log(res);
+          },
+          error:function(error) {
+              console.log(error)
+      },})
+    }
 
 </script>
 </html>

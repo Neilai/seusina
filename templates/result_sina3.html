@@ -8,7 +8,8 @@
     <script src="https://cdn.bootcss.com/echarts/2.2.4/echarts-all.js"></script>
 </head>
 <body>
-<div id="main" style="width: 900px;height:600px;"></div>
+<img id="loading" src="/static/img/loading.gif" alt="加载中" style="width:400px;height:400px;position: fixed;top:0;left:0;right:0;bottom: 0;margin:auto;display:none;">
+<div id="main" style="width: 900px;height:600px;margin: auto"></div>
 </body>
 
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -16,6 +17,8 @@
 <script>
 var myChart = echarts.init(document.getElementById('main'));
 // 指定图表的配置项和数据
+img=document.getElementById("loading")
+      img.style.display="block"
            option = {
             title : {
                 text: '微博人物关系',
@@ -30,6 +33,9 @@ var myChart = echarts.init(document.getElementById('main'));
             toolbox: {
                 show : true,
                 feature : {
+                     dataView:{
+                    show:true
+                },
                     restore : {show: true},
                     magicType: {show: true, type: ['force', 'chord']},
                     saveAsImage : {show: true}
@@ -105,13 +111,14 @@ var myChart = echarts.init(document.getElementById('main'));
           cache: false,
           type: "POST",
           url: "/result3/",
-          data: {"cookie":"{{cookie}}"},
+          data: {"cookie":"{{cookie}}","jobid":"{{jobid}}"},
           async: true,
           beforeSend: function (xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
           },
           success: function (res) {
               if(res["fanslevel"]){
+                     img.style.display="none"
                       console.log(res)
                       par={};
                       son={};
@@ -124,9 +131,6 @@ var myChart = echarts.init(document.getElementById('main'));
                       son["category"]=res["fanslevel"];
                       son["name"]=res["fansname"];
                       son["value"]=parseInt(20/(son["category"]+1));
-
-                      console.log(par)
-                      console.log(son)
                       link["source"]=par["name"];
                       link["target"]=son["name"];
                       link["weight"]=res["fanslevel"];
@@ -153,7 +157,25 @@ var myChart = echarts.init(document.getElementById('main'));
               }
           },
           error:function(error) {
-              alert('ajax 请求失败！')
+              console.log('ajax 请求失败！')
       },})},500)
+
+     window.onbeforeunload = function(){
+        $.ajax({
+          cache: false,
+          type: "POST",
+          url: "/cancel/",
+          data: {"cookie":"{{cookie}}","jobid":"{{jobid}}"},
+          async: true,
+          beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+          },
+          success: function (res) {
+              console.log(res);
+          },
+          error:function(error) {
+              console.log(error)
+      },})
+    }
 </script>
 </html>

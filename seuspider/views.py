@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from  seuspider.models import *
 from django.http import HttpResponseRedirect,HttpResponse
-import json,redis
+import json,redis,time
 from django.core.urlresolvers import reverse
 # Create your views here.
 
@@ -17,17 +17,18 @@ class sina(View):
         cookie = request.POST.get("cookie", "")
         url = request.POST.get("url", "")
         data = {"project": "sina", "spider": "sinaspider", "cookie": cookie, "url": url}
-        result = requests.post("http://localhost:6800/schedule.json", data=data)
-        result=json.loads(result.text)
+        result = requests.post("http://120.78.196.125/schedule.json", data=data)
+        result = json.loads(result.text)
+        jobid = result["jobid"]
         if result["status"]=='ok':
-            return render(request, "result_sina.html", {'cookie': cookie})
+            return render(request, "result_sina.html", {'cookie': cookie,'jobid':jobid})
         else:
             return  render(request,"personalweibo.html",{"message":"爬虫启动失败"})
 
 class result(View):
     def post(self,request):
         res={}
-        r = redis.Redis(host='127.0.0.1', port=6379)
+        r = redis.Redis(host='120.78.196.125', port=6379)
 
         cookie = request.POST.get("cookie","")
         print(cookie)
@@ -53,14 +54,16 @@ class sina1(View):
         cookie = request.POST.get("cookie", "")
         url = request.POST.get("url", "")
         data = {"project": "sina", "spider": "sinaspider2", "cookie": cookie, "url": url}
-        result = requests.post("http://localhost:6800/schedule.json", data=data)
-        return render(request, "result_sina1.html", {'cookie': cookie})
+        result = requests.post("http://120.78.196.125/schedule.json", data=data)
+        result = json.loads(result.text)
+        jobid = result["jobid"]
+        return render(request, "result_sina1.html", {'cookie': cookie,'jobid':jobid})
 
 
 class result1(View):
     def post(self,request):
         res={}
-        r = redis.Redis(host='127.0.0.1', port=6379)
+        r = redis.Redis(host='120.78.196.125', port=6379)
         try:
             cookie = request.POST.get("cookie","")
             timeVal=r.lpop(cookie+'datetime2')
@@ -79,15 +82,17 @@ class sina2(View):
         cookie=request.POST.get("cookie","")
         url=request.POST.get("url","")
         data = {"project": "sina", "spider": "sinaspider3", "cookie": cookie, "url": url}
-        result = requests.post("http://localhost:6800/schedule.json", data=data)
-        return render(request, "result_sina2.html", {'cookie': cookie})
+        result = requests.post("http://120.78.196.125/schedule.json", data=data)
+        result = json.loads(result.text)
+        jobid = result["jobid"]
+        return render(request, "result_sina2.html", {'cookie': cookie,'jobid':jobid})
 
 
 class result2(View):
     def post(self,request):
         res={}
         try:
-            r = redis.Redis(host='127.0.0.1', port=6379)
+            r = redis.Redis(host='120.78.196.125', port=6379)
             cookie = request.POST.get("cookie", "")
             location=r.lpop(cookie+'location3')
             if(location):
@@ -105,15 +110,17 @@ class sina3(View):
         cookie = request.POST.get("cookie", "")
         url = request.POST.get("url", "")
         data = {"project": "sina", "spider": "sinaspider4", "cookie": cookie, "url": url}
-        result = requests.post("http://localhost:6800/schedule.json", data=data)
-        return render(request, "result_sina3.html", {'cookie': cookie})
+        result = requests.post("http://120.78.196.125/schedule.json", data=data)
+        result=json.loads(result.text)
+        jobid=result["jobid"]
+        return render(request, "result_sina3.html", {'cookie': cookie,'jobid':jobid})
 
 
 class result3(View):
     def post(self,request):
         res = {}
         try:
-            r = redis.Redis(host='127.0.0.1', port=6379)
+            r = redis.Redis(host='120.78.196.125', port=6379)
             cookie = request.POST.get("cookie", "")
             fansparent = r.lpop(cookie + 'fansparent4')
             fansname=r.lpop(cookie + 'fansname4')
@@ -124,4 +131,21 @@ class result3(View):
             res["fanslevel"]=fanslevel.decode()
         except:
             res={}
+        return HttpResponse(json.dumps(res), content_type='application/json')
+
+
+class cancel(View):
+    def post(self,request):
+        res = {"code":"ok"}
+        try:
+            r = redis.Redis(host='120.78.196.125', port=6379)
+            cookie = request.POST.get("cookie", "")
+            jobid=request.POST.get("jobid","")
+            data = {"project": "sina", "job": jobid}
+            result = requests.post("http://120.78.196.125/cancel.json", data=data)
+            result = requests.post("http://120.78.196.125/cancel.json", data=data)
+            time.sleep(3)
+            r.delete(*r.keys(("*" + cookie + "*")))
+        except:
+            res = {"code": "fail"}
         return HttpResponse(json.dumps(res), content_type='application/json')

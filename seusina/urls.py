@@ -19,14 +19,18 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic import TemplateView
-from seuspider.views import sina,sina1,sina2,sina3,result,result1,result2,result3
+from seuspider.views import sina,sina1,sina2,sina3,result,result1,result2,result3,cancel
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+
+    url(r'^cancel/$',cancel.as_view()),
+
     url(r'^result/',  result.as_view(),name="result"),
     url(r'^result1/', result1.as_view(),name="result1"),
     url(r'^result2/', result2.as_view(),name="result2"),
     url(r'^result3/', result3.as_view(),name="result3"),
     url(r'^personalweibo/$',sina.as_view()),
+
 
     url(r'^singleweibo/$',sina1.as_view()),
 
