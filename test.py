@@ -6,14 +6,15 @@ import json
 # url="2613164393"
 # data = {"project": "sina", "spider": "sinaspider4", "cookie": cookie, "url": url}
 # result = requests.post("http://120.78.196.125/schedule.json", data=data)
-jobid="57fd99904c7c11e88b3d00163e0ad926"
-data = {"project": "sina", "job": jobid}
-result = requests.post("http://120.78.196.125/cancel.json", data=data)
-result=json.loads(result.text)
-print(result)
-# import redis
+# jobid="25a21a9a4ce811e8bf8700163e0ad926"
+# data = {"project": "sina", "job": jobid}
+# result = requests.post("http://120.78.196.125/cancel.json", data=data)
+# result=json.loads(result.text)
+# print(result)
+import redis
 # res={}
-# r = redis.Redis(host='120.78.196.125', port=6379)
+r = redis.Redis(host='120.78.196.125', port=6379)
+r.lpush("a","a")
 # fansparent = r.lpop(cookie + 'fansparent4')
 # fansname=r.lpop(cookie + 'fansname4')
 # fanslevel = r.lpop(cookie + 'fanslevel4')
@@ -22,3 +23,10 @@ print(result)
 # res["fanslevel"]=fanslevel.decode()
 # r.delete(*r.keys(("*"+cookie+"*")))
 # print(res)
+# if  "哈哈哈":
+#     print("1234")
+# cookie="a"
+# data={"cookie":cookie}
+# print("123")
+# res=requests.post("http://39.106.205.132/result2/", data=data)
+# print(res.text)
